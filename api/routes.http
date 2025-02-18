@@ -1,0 +1,50 @@
+@port = {{$dotenv API_PORT}}
+
+###
+
+GET http://localhost:{{port}}/api/health
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
+Content-Type: application/json
+
+###
+
+GET http://localhost:{{port}}/api/tasks
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
+Content-Type: application/json
+
+###
+
+POST http://localhost:{{port}}/api/tasks
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "title": "Lorem ipsum",
+  "description": "Lorem ipsum dolor sit amet",
+  "status": "in_progress"
+}
+
+###
+
+PATCH http://localhost:{{port}}/api/tasks/1
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "title": "Dolor sit amet"
+}
+
+###
+
+DELETE http://localhost:{{port}}/api/tasks/1
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
