@@ -45,6 +45,30 @@ export class TaskController {
     }
   }
 
+  static async show(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const task = await ApiDataSource.getRepository(Task).findOne({
+        where: { id: Number(id) },
+      });
+
+      if (!task) {
+        res.status(HttpStatusCode.NOT_FOUND).json({
+          message: `Task with ID ${id} not found.`,
+        });
+        return;
+      }
+
+      res.status(HttpStatusCode.OK).json({ data: task });
+    } catch (err) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        message:
+          "An error occurred during operation. If this persist please contact support.",
+      });
+    }
+  }
+
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
