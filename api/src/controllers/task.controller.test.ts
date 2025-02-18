@@ -38,7 +38,9 @@ describe("TaskController", () => {
         { id: 2, title: "Task 2", status: TaskStatus.COMPLETED },
       ];
 
-      (ApiDataSource.getRepository(Task).find as jest.Mock).mockResolvedValue(tasks);
+      (ApiDataSource.getRepository(Task).find as jest.Mock).mockResolvedValue(
+        tasks
+      );
 
       const req = mockRequest();
       const res = mockResponse();
@@ -51,7 +53,9 @@ describe("TaskController", () => {
     });
 
     it("should return 500 if an error occurs", async () => {
-      (ApiDataSource.getRepository(Task).find as jest.Mock).mockRejectedValue(new Error("Database error"));
+      (ApiDataSource.getRepository(Task).find as jest.Mock).mockRejectedValue(
+        new Error("Database error")
+      );
 
       const req = mockRequest();
       const res = mockResponse();
@@ -59,7 +63,9 @@ describe("TaskController", () => {
 
       await TaskController.index(req as Request, res as Response, next);
 
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR);
+      expect(res.status).toHaveBeenCalledWith(
+        HttpStatusCode.INTERNAL_SERVER_ERROR
+      );
       expect(res.json).toHaveBeenCalledWith({
         message:
           "An error occurred during operation. If this persist please contact support.",
@@ -72,8 +78,12 @@ describe("TaskController", () => {
       const newTask = { title: "New Task", status: TaskStatus.IN_PROGRESS };
       const createdTask = { id: 1, ...newTask };
 
-      (ApiDataSource.getRepository(Task).create as jest.Mock).mockReturnValue(createdTask);
-      (ApiDataSource.getRepository(Task).save as jest.Mock).mockResolvedValue(createdTask);
+      (ApiDataSource.getRepository(Task).create as jest.Mock).mockReturnValue(
+        createdTask
+      );
+      (ApiDataSource.getRepository(Task).save as jest.Mock).mockResolvedValue(
+        createdTask
+      );
 
       const req = mockRequest();
       req.body = newTask;
@@ -108,8 +118,12 @@ describe("TaskController", () => {
     it("should return 500 if an error occurs", async () => {
       const newTask = { title: "New Task", status: TaskStatus.IN_PROGRESS };
 
-      (ApiDataSource.getRepository(Task).create as jest.Mock).mockReturnValue(newTask);
-      (ApiDataSource.getRepository(Task).save as jest.Mock).mockRejectedValue(new Error("Database error"));
+      (ApiDataSource.getRepository(Task).create as jest.Mock).mockReturnValue(
+        newTask
+      );
+      (ApiDataSource.getRepository(Task).save as jest.Mock).mockRejectedValue(
+        new Error("Database error")
+      );
 
       const req = mockRequest();
       req.body = newTask;
@@ -119,7 +133,71 @@ describe("TaskController", () => {
 
       await TaskController.store(req as Request, res as Response, next);
 
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR);
+      expect(res.status).toHaveBeenCalledWith(
+        HttpStatusCode.INTERNAL_SERVER_ERROR
+      );
+      expect(res.json).toHaveBeenCalledWith({
+        message:
+          "An error occurred during operation. If this persist please contact support.",
+      });
+    });
+  });
+
+  describe("show", () => {
+    it("should return the task with the given ID", async () => {
+      const task = { id: 1, title: "Task 1", status: TaskStatus.IN_PROGRESS };
+
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(task);
+
+      const req = mockRequest();
+      req.params = { id: "1" };
+
+      const res = mockResponse();
+      const next: NextFunction = mockNext;
+
+      await TaskController.show(req as Request, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.OK);
+      expect(res.json).toHaveBeenCalledWith({ data: task });
+    });
+
+    it("should return 404 if the task with the given ID is not found", async () => {
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(null);
+
+      const req = mockRequest();
+      req.params = { id: "999" };
+
+      const res = mockResponse();
+      const next: NextFunction = mockNext;
+
+      await TaskController.show(req as Request, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.NOT_FOUND);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Task with ID 999 not found.",
+      });
+    });
+
+    it("should return 500 if an error occurs", async () => {
+      const req = mockRequest();
+      req.params = { id: "1" };
+
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockRejectedValue(new Error("Database error"));
+
+      const res = mockResponse();
+      const next: NextFunction = mockNext;
+
+      await TaskController.show(req as Request, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(
+        HttpStatusCode.INTERNAL_SERVER_ERROR
+      );
       expect(res.json).toHaveBeenCalledWith({
         message:
           "An error occurred during operation. If this persist please contact support.",
@@ -129,10 +207,18 @@ describe("TaskController", () => {
 
   describe("update", () => {
     it("should update an existing task and return 200", async () => {
-      const updatedTask = { id: 1, title: "Updated Task", status: TaskStatus.COMPLETED };
+      const updatedTask = {
+        id: 1,
+        title: "Updated Task",
+        status: TaskStatus.COMPLETED,
+      };
 
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockResolvedValue(updatedTask);
-      (ApiDataSource.getRepository(Task).save as jest.Mock).mockResolvedValue(updatedTask);
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(updatedTask);
+      (ApiDataSource.getRepository(Task).save as jest.Mock).mockResolvedValue(
+        updatedTask
+      );
 
       const req = mockRequest();
       req.params = { id: "1" };
@@ -148,7 +234,9 @@ describe("TaskController", () => {
     });
 
     it("should return 404 if task is not found", async () => {
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockResolvedValue(null);
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(null);
 
       const req = mockRequest();
       req.params = { id: "999" };
@@ -170,14 +258,18 @@ describe("TaskController", () => {
       req.params = { id: "1" };
       req.body = { title: "Updated Task", status: TaskStatus.COMPLETED };
 
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockRejectedValue(new Error("Database error"));
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockRejectedValue(new Error("Database error"));
 
       const res = mockResponse();
       const next: NextFunction = mockNext;
 
       await TaskController.update(req as Request, res as Response, next);
 
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR);
+      expect(res.status).toHaveBeenCalledWith(
+        HttpStatusCode.INTERNAL_SERVER_ERROR
+      );
       expect(res.json).toHaveBeenCalledWith({
         message:
           "An error occurred during operation. If this persist please contact support.",
@@ -187,10 +279,18 @@ describe("TaskController", () => {
 
   describe("destroy", () => {
     it("should delete a task and return 204", async () => {
-      const taskToDelete = { id: 1, title: "Task to Delete", status: TaskStatus.IN_PROGRESS };
+      const taskToDelete = {
+        id: 1,
+        title: "Task to Delete",
+        status: TaskStatus.IN_PROGRESS,
+      };
 
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockResolvedValue(taskToDelete);
-      (ApiDataSource.getRepository(Task).remove as jest.Mock).mockResolvedValue(undefined);
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(taskToDelete);
+      (ApiDataSource.getRepository(Task).remove as jest.Mock).mockResolvedValue(
+        undefined
+      );
 
       const req = mockRequest();
       req.params = { id: "1" };
@@ -205,7 +305,9 @@ describe("TaskController", () => {
     });
 
     it("should return 404 if task is not found", async () => {
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockResolvedValue(null);
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockResolvedValue(null);
 
       const req = mockRequest();
       req.params = { id: "999" };
@@ -225,14 +327,18 @@ describe("TaskController", () => {
       const req = mockRequest();
       req.params = { id: "1" };
 
-      (ApiDataSource.getRepository(Task).findOne as jest.Mock).mockRejectedValue(new Error("Database error"));
+      (
+        ApiDataSource.getRepository(Task).findOne as jest.Mock
+      ).mockRejectedValue(new Error("Database error"));
 
       const res = mockResponse();
       const next: NextFunction = mockNext;
 
       await TaskController.destroy(req as Request, res as Response, next);
 
-      expect(res.status).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR);
+      expect(res.status).toHaveBeenCalledWith(
+        HttpStatusCode.INTERNAL_SERVER_ERROR
+      );
       expect(res.json).toHaveBeenCalledWith({
         message:
           "An error occurred during operation. If this persist please contact support.",
