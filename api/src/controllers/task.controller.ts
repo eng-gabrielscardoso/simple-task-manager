@@ -39,12 +39,12 @@ export class TaskController {
 
       await ApiDataSource.getRepository(Task).save(task);
 
-      return res.status(HttpStatusCode.CREATED).json({
+      res.status(HttpStatusCode.CREATED).json({
         data: task,
       });
     } catch (err) {
       console.error(err);
-      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         message:
           "An error occurred during operation. If this persist please contact support.",
       });
