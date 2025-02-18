@@ -8,4 +8,4 @@ app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/api", Routes);
 
-export default app;
+export const App: Application = app;
