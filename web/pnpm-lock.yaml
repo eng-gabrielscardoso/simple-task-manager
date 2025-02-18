@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      primeflex:
+        specifier: ^4.0.0
+        version: 4.0.0
       primereact:
         specifier: ^10.9.2
         version: 10.9.2(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -923,6 +926,9 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  primeflex@4.0.0:
+    resolution: {integrity: sha512-UOEZCRjR36+sm5bUpDhS1xbA068l9VC6y1aTNVqQPtXuKIdPTqAWHRUxj3mKAoPrQ9W373ooJJMgNVXfiaw04g==}
 
   primereact@10.9.2:
     resolution: {integrity: sha512-uJTghCPlnPWJc0mvkqYJDj6bl4udROPGrMEfV4CPh7UurMS+E8b+82ABZ+OPWibQOWxnEQl5NXcfG4F/7YRXwA==}
@@ -1938,6 +1944,8 @@ snapshots:
       source-map-js: 1.2.1
 
   prelude-ls@1.2.1: {}
+
+  primeflex@4.0.0: {}
 
   primereact@10.9.2(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
