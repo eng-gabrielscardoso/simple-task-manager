@@ -32,6 +32,14 @@ Content-Type: application/json
 
 ###
 
+GET http://localhost:{{port}}/api/tasks/1
+Accept: application/json
+Connection: keep-alive
+Accept-Language: en-GB
+Content-Type: application/json
+
+###
+
 PATCH http://localhost:{{port}}/api/tasks/1
 Accept: application/json
 Connection: keep-alive
