@@ -6,6 +6,8 @@ const app: Application = express();
 
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.use(express.json());
+
 app.use("/api", Routes);
 
 export const App: Application = app;
