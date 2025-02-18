@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpStatusCode } from "../helpers/http";
 
-class HealthController {
-  async health(req: Request, res: Response, next: NextFunction): Promise<void> {
+export class HealthController {
+  static async health(req: Request, res: Response, next: NextFunction) {
     try {
       res.status(HttpStatusCode.OK).json({
-        status: "OK",
+        message: "OK",
       });
     } catch (err) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -14,5 +14,3 @@ class HealthController {
     }
   }
 }
-
-export default new HealthController
