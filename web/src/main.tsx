@@ -5,6 +5,7 @@ import { App } from './App.tsx'
 
 import "./index.css";
 import "primeflex/primeflex.css";
+import 'primeicons/primeicons.css';
 import "primereact/resources/themes/lara-dark-amber/theme.css";
 
 createRoot(document.getElementById('root')!).render(
