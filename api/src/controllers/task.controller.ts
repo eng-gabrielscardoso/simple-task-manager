@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpStatusCode } from "../helpers/http";
 import { ApiDataSource } from "../data-source";
 import { Task, TaskStatus } from "../entities/Task";
-import secrets from "../helpers/secrets";
+import { createTaskSchema, updateTaskSchema } from "../schemas/task";
 
 export class TaskController {
   static async index(req: Request, res: Response, next: NextFunction) {
@@ -22,26 +22,21 @@ export class TaskController {
 
   static async store(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, status } = req.body;
+      const parsedBody = createTaskSchema.safeParse(req.body);
 
-      if (!title) {
+      if (!parsedBody.success) {
         res.status(HttpStatusCode.BAD_REQUEST).json({
-          message: "Title is required.",
+          message: "Validation failed.",
+          errors: parsedBody.error.errors,
         });
         return;
       }
 
-      const task = ApiDataSource.getRepository(Task).create({
-        title,
-        description,
-        status: status || TaskStatus.PENDING,
-      });
+      const task = ApiDataSource.getRepository(Task).create(parsedBody.data);
 
       await ApiDataSource.getRepository(Task).save(task);
 
-      res.status(HttpStatusCode.CREATED).json({
-        data: task,
-      });
+      res.status(HttpStatusCode.CREATED).json({ data: task });
     } catch (err) {
       console.error(err);
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -54,12 +49,18 @@ export class TaskController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { title, description, status } = req.body;
+      const parsedBody = updateTaskSchema.partial().safeParse(req.body);
+
+      if (!parsedBody.success) {
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          message: "Validation failed.",
+          errors: parsedBody.error.errors,
+        });
+        return;
+      }
 
       const task = await ApiDataSource.getRepository(Task).findOne({
-        where: {
-          id: Number(id),
-        },
+        where: { id: Number(id) },
       });
 
       if (!task) {
@@ -69,15 +70,11 @@ export class TaskController {
         return;
       }
 
-      task.title = title ?? task.title;
-      task.description = description ?? task.description;
-      task.status = status ?? task.status;
+      Object.assign(task, parsedBody.data);
 
       await ApiDataSource.getRepository(Task).save(task);
 
-      res.status(HttpStatusCode.OK).json({
-        data: task,
-      });
+      res.status(HttpStatusCode.OK).json({ data: task });
     } catch (err) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         message:
