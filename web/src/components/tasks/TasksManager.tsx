@@ -1,46 +1,44 @@
-import { Task, TaskStatus } from "@/interfaces/task";
+import { useEffect, useState } from "react";
+import { Task } from "@/interfaces/task";
+import { TaskService } from "@/services/tasks/tasks.service";
 import { TaskCard } from "./TaskCard";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { useState } from "react";
 
-const mockTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Lorem ipsu,',
-    description: 'Dolor sit amet',
-    status: TaskStatus.PENDING,
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: 2,
-    title: 'Lorem ipsu,',
-    description: 'Dolor sit amet',
-    status: TaskStatus.IN_PROGRESS,
-    created_at: new Date(),
-    updated_at: new Date(),
-  },
-  {
-    id: 3,
-    title: 'Lorem ipsu,',
-    description: 'Dolor sit amet',
-    status: TaskStatus.COMPLETED,
-    created_at: new Date(),
-    updated_at: new Date(),
-  }
-]
+const taskService = new TaskService();
 
 export const TaskManager = () => {
-  const [tasks, setTasks] = useState<Task[]>(mockTasks)
+  const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const {data} = await taskService.findAll();
+        setTasks(data?.data);
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+        setTasks([]);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  if (tasks === undefined) {
+    return <span>Loading tasks...</span>;
+  }
 
   return (
-    <div className="grid">
+    <div className="w-full grid">
       <ConfirmDialog />
-      {tasks.map((task) => (
-        <div className="col-12 sm:col-6 lg:col-4" key={task.id}>
-          <TaskCard task={task} />
-        </div>
-      ))}
+      {tasks.length === 0 ? (
+        <span>No tasks yet</span>
+      ) : (
+        tasks.map((task) => (
+          <div className="col-12 sm:col-6 lg:col-4" key={task.id}>
+            <TaskCard task={task} />
+          </div>
+        ))
+      )}
     </div>
   );
 };
