@@ -9,8 +9,11 @@ import { createTaskSchema } from "@/schemas/task";
 import { z } from "zod";
 import { Toast } from "primereact/toast";
 import { statuses } from "@/constants/statuses";
+import { TaskService } from "@/services/tasks/tasks.service";
 
 type CreateTaskForm = z.infer<typeof createTaskSchema>;
+
+const taskService: TaskService = new TaskService();
 
 export const CreateTask = () => {
   const toast = useRef<Toast | null>(null);
@@ -47,9 +50,13 @@ export const CreateTask = () => {
     },
   });
 
-  const onSubmit = (data: CreateTaskForm) => {
+  const onSubmit = async (data: CreateTaskForm) => {
     try {
-      showToast("success", "Task created successfully");
+      const { data: response } = await taskService.create(data)
+
+      if (response) {
+        showToast("success", "Task created successfully");
+      }
     } catch (err) {
       showToast("error", "Error during task creation.", err as ReactNode);
     } finally {
