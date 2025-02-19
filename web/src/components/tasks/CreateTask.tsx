@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema } from "@/schemas/task";
@@ -13,21 +13,22 @@ import { Toast } from "primereact/toast";
 type CreateTaskForm = z.infer<typeof createTaskSchema>;
 
 export const CreateTask = () => {
-  const toast = useRef(null);
+  const toast = useRef<Toast | null>(null);
   const [isVisible, toggleVisible] = useState(false);
 
   const showToast = (
-    severity: string,
-    summary: string,
-    detail: string | unknown | null
+    severity?:
+      | "success"
+      | "info"
+      | "warn"
+      | "error"
+      | "secondary"
+      | "contrast"
+      | undefined,
+    summary?: ReactNode,
+    detail?: ReactNode
   ) => {
-    if (toast.current) {
-      toast.current.show({
-        severity,
-        summary,
-        detail,
-      });
-    }
+    toast.current?.show({ severity, summary, detail });
   };
 
   const {
@@ -51,7 +52,7 @@ export const CreateTask = () => {
       console.log("Task Created:", data);
       showToast("success", "Task created successfully");
     } catch (err) {
-      showToast("error", "Error during task creation.", err);
+      showToast("error", "Error during task creation.", err as ReactNode);
     } finally {
       reset();
       toggleVisible(false);
