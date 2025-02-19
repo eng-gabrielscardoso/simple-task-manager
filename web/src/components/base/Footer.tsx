@@ -9,7 +9,7 @@ export const Footer = () => {
           link
           label="Gabriel Santos Cardoso."
           onClick={() => window.open("https://gabrielscardoso.com", "_blank")}
-          className="h-fit w-fit p-1"
+          className="h-fit w-fit"
         />
       </footer>
     </>

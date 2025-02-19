@@ -4,7 +4,7 @@ import brand64 from "@/assets/brand_64.png";
 export const Navbar = () => {
   return (
     <>
-      <nav className="flex justify-content-between align-items-center gap-2">
+      <nav className="flex justify-content-between align-items-center gap-2 w-full">
         <figure className="flex justify-content-between align-items-center gap-2">
           <img
             src={brand64}
