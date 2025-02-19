@@ -1,7 +1,12 @@
 import { CreateTask } from "@/components/tasks/CreateTask";
 import brand64 from "@/assets/brand_64.png";
+import { Task } from '@/interfaces/task';
 
-export const Navbar = () => {
+interface NavbarProps {
+  onTaskCreated: (task: Task) => void;
+}
+
+export const Navbar = ({ onTaskCreated }: NavbarProps) => {
   return (
     <>
       <nav className="flex justify-content-between align-items-center gap-2 w-full">
@@ -13,7 +18,7 @@ export const Navbar = () => {
           />
           <h1 className="text-2xl font-bold text-primary">STM</h1>
         </figure>
-        <CreateTask />
+        <CreateTask onTaskCreated={onTaskCreated} />
       </nav>
     </>
   );

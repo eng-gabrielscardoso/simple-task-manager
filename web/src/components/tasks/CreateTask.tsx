@@ -10,12 +10,17 @@ import { z } from "zod";
 import { Toast } from "primereact/toast";
 import { statuses } from "@/constants/statuses";
 import { TaskService } from "@/services/tasks/tasks.service";
+import { Task } from '@/interfaces/task';
 
 type CreateTaskForm = z.infer<typeof createTaskSchema>;
 
+interface CreateTaskProps {
+  onTaskCreated: (task: Task) => void;
+}
+
 const taskService: TaskService = new TaskService();
 
-export const CreateTask = () => {
+export const CreateTask = ({ onTaskCreated }: CreateTaskProps) => {
   const toast = useRef<Toast | null>(null);
   const [isVisible, toggleVisible] = useState(false);
 
@@ -52,10 +57,11 @@ export const CreateTask = () => {
 
   const onSubmit = async (data: CreateTaskForm) => {
     try {
-      const { data: response } = await taskService.create(data)
+      const { data: response } = await taskService.create(data);
 
-      if (response) {
+      if (response.data) {
         showToast("success", "Task created successfully");
+        onTaskCreated(response.data);
       }
     } catch (err) {
       showToast("error", "Error during task creation.", err as ReactNode);
