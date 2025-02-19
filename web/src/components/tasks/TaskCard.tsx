@@ -1,27 +1,34 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
+import { EditTask } from "./EditTask";
+import { Task } from "@/interfaces/task";
 
-export const TaskCard = () => {
+type TaskCardProps = {
+  task: Task
+}
+
+export const TaskCard = ({ task }: TaskCardProps) => {
   const headerContent = (
-    <div className="p-2 text-lg font-bold">Lorem ipsum</div>
+    <div className="p-2 text-lg font-bold">#{task.id} - {task.title}</div>
   );
 
+  const onUpdate = () => {}
+
   const footerContent = (
-    <div className="text-sm flex justify-content-between align-items-center">
+    <div className="text-sm flex flex-column sm:flex-row justify-content-between align-items-center gap-2">
       <div>
-        <span>
-          {new Date().getDate()}/{new Date().getMonth()}/
-          {new Date().getFullYear()}
-        </span>{" "}
-        - <i className="font-italic"></i>In progress
+        <i className="font-italic">{task.status}</i>
       </div>
-      <Button
-        type="button"
-        severity="success"
-        size="small"
-        icon="pi pi-check-circle"
-        label="Conclude"
-      />
+      <div className="flex justify-content-between align-items-center gap-1">
+        <EditTask task={task} onUpdate={onUpdate} />
+        <Button
+          type="button"
+          severity="success"
+          size="small"
+          icon="pi pi-check-circle"
+          label="Conclude"
+        />
+      </div>
     </div>
   );
 
@@ -29,10 +36,7 @@ export const TaskCard = () => {
     <>
       <Card header={headerContent} footer={footerContent}>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et autem
-          laborum temporibus ratione ab maiores! Eaque, odio qui quo
-          consequatur, excepturi sequi ea ullam omnis laboriosam autem nemo aut
-          natus!
+          {task.description}
         </p>
       </Card>
     </>
