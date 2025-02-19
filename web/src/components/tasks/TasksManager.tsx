@@ -1,6 +1,7 @@
 import { Task, TaskStatus } from "@/interfaces/task";
 import { TaskCard } from "./TaskCard";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { useState } from "react";
 
 const mockTasks: Task[] = [
   {
@@ -30,10 +31,12 @@ const mockTasks: Task[] = [
 ]
 
 export const TaskManager = () => {
+  const [tasks, setTasks] = useState<Task[]>(mockTasks)
+
   return (
     <div className="grid">
       <ConfirmDialog />
-      {mockTasks.map((task) => (
+      {tasks.map((task) => (
         <div className="col-12 sm:col-6 lg:col-4" key={task.id}>
           <TaskCard task={task} />
         </div>

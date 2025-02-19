@@ -46,7 +46,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       acceptClassName: "p-button-success",
       accept: async () => {
         try {
-          console.log("Something");
+          onUpdate()
           showToast("success", "Task concluded");
         } catch (err) {
           showToast("error", "Error during conclusion", err as ReactNode);
@@ -54,7 +54,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       },
       reject: async () => {
         try {
-          console.log("Something");
           showToast("info", "Operation aborted");
         } catch (err) {
           showToast("error", "Error during rejection", err as ReactNode);
