@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createTaskSchema } from "@/schemas/task";
 import { z } from "zod";
 import { Toast } from "primereact/toast";
-import { statuses } from "../constants/statuses";
+import { statuses } from "@/constants/statuses";
 
 type CreateTaskForm = z.infer<typeof createTaskSchema>;
 

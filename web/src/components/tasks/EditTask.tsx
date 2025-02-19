@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateTaskSchema } from "@/schemas/task";
 import { z } from "zod";
 import { Toast } from "primereact/toast";
-import { statuses } from "../constants/statuses";
+import { statuses } from "@/constants/statuses";
 
 type EditTaskForm = z.infer<typeof updateTaskSchema>;
 

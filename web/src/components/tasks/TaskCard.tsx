@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { EditTask } from "./EditTask";
 import { Task } from "@/interfaces/task";
-import { statuses } from "../constants/statuses";
+import { statuses } from "@/constants/statuses";
 import { ReactNode, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { confirmDialog } from "primereact/confirmdialog";
