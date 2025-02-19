@@ -3,7 +3,6 @@ import { http } from "../http";
 
 export class TaskService {
   async findAll() {
-    console.log(import.meta.env.API_URL)
     return await http.get("/tasks");
   }
 

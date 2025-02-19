@@ -49,7 +49,6 @@ export const CreateTask = () => {
 
   const onSubmit = (data: CreateTaskForm) => {
     try {
-      console.log("Task Created:", data);
       showToast("success", "Task created successfully");
     } catch (err) {
       showToast("error", "Error during task creation.", err as ReactNode);
