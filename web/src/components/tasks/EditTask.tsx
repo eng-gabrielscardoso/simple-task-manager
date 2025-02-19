@@ -1,4 +1,3 @@
-import { TaskStatus } from "@/interfaces/task";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -9,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateTaskSchema } from "@/schemas/task";
 import { z } from "zod";
 import { Toast } from "primereact/toast";
+import { statuses } from "../constants/statuses";
 
 type EditTaskForm = z.infer<typeof updateTaskSchema>;
 
@@ -63,12 +63,6 @@ export const EditTask = ({ task, onUpdate }: EditTaskProps) => {
     reset(task);
     toggleVisible(false);
   };
-
-  const statuses = [
-    { label: "Pending", value: TaskStatus.PENDING },
-    { label: "In Progress", value: TaskStatus.IN_PROGRESS },
-    { label: "Completed", value: TaskStatus.COMPLETED },
-  ];
 
   return (
     <>

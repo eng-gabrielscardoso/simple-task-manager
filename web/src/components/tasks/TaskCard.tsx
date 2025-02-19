@@ -2,6 +2,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { EditTask } from "./EditTask";
 import { Task } from "@/interfaces/task";
+import { statuses } from "../constants/statuses";
 
 type TaskCardProps = {
   task: Task
@@ -17,7 +18,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
   const footerContent = (
     <div className="text-sm flex flex-column sm:flex-row justify-content-between align-items-center gap-2">
       <div>
-        <i className="font-italic">{task.status}</i>
+        <i className="font-italic">{statuses.find(status => status.value === task.status)?.label}</i>
       </div>
       <div className="flex justify-content-between align-items-center gap-1">
         <EditTask task={task} onUpdate={onUpdate} />
