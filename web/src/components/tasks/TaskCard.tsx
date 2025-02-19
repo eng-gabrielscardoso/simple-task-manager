@@ -1,17 +1,21 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { EditTask } from "./EditTask";
-import { Task } from "@/interfaces/task";
+import { Task, TaskStatus } from "@/interfaces/task";
 import { statuses } from "@/constants/statuses";
 import { ReactNode, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { confirmDialog } from "primereact/confirmdialog";
+import { TaskService } from "@/services/tasks/tasks.service";
 
 type TaskCardProps = {
   task: Task;
+  onTaskUpdate: (task: Task) => void;
 };
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+const taskService: TaskService = new TaskService();
+
+export const TaskCard = ({ task, onTaskUpdate }: TaskCardProps) => {
   const toast = useRef<Toast | null>(null);
 
   const showToast = (
@@ -35,8 +39,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     </div>
   );
 
-  const onUpdate = () => {};
-
   const confirmConclusion = async () => {
     confirmDialog({
       message: `Do you want to conclude task #${task.id}?`,
@@ -46,8 +48,17 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       acceptClassName: "p-button-success",
       accept: async () => {
         try {
-          onUpdate()
-          showToast("success", "Task concluded");
+          const { data: response } = await taskService.update(task.id, {
+            status: TaskStatus.COMPLETED
+          });
+
+          if (response.data) {
+            onTaskUpdate({
+              ...task,
+              status: TaskStatus.COMPLETED
+            });
+            showToast("success", "Task concluded");
+          }
         } catch (err) {
           showToast("error", "Error during conclusion", err as ReactNode);
         }
@@ -70,7 +81,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         </i>
       </div>
       <div className="flex justify-content-between align-items-center gap-1">
-        <EditTask task={task} onUpdate={onUpdate} />
+        <EditTask task={task} onTaskUpdated={onTaskUpdate} />
         <Button
           type="button"
           severity="success"

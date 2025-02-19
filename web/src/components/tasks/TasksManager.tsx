@@ -4,9 +4,10 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 
 interface TaskManagerProps {
   tasks: Task[];
+  onTaskUpdated: (task: Task) => void;
 }
 
-export const TaskManager = ({ tasks }: TaskManagerProps) => {
+export const TaskManager = ({ tasks, onTaskUpdated }: TaskManagerProps) => {
   return (
     <div className="w-full grid align-items-center">
       <ConfirmDialog />
@@ -15,7 +16,7 @@ export const TaskManager = ({ tasks }: TaskManagerProps) => {
       ) : (
         tasks.map((task) => (
           <div className="col-12 sm:col-6 lg:col-4" key={task.id}>
-            <TaskCard task={task} />
+            <TaskCard task={task} onTaskUpdate={onTaskUpdated} />
           </div>
         ))
       )}

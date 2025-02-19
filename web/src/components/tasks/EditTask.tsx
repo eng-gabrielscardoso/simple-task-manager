@@ -9,15 +9,19 @@ import { updateTaskSchema } from "@/schemas/task";
 import { z } from "zod";
 import { Toast } from "primereact/toast";
 import { statuses } from "@/constants/statuses";
+import { TaskService } from "@/services/tasks/tasks.service";
+import { Task } from "@/interfaces/task";
 
 type EditTaskForm = z.infer<typeof updateTaskSchema>;
 
 type EditTaskProps = {
   task: EditTaskForm;
-  onUpdate: (task: EditTaskForm) => void;
+  onTaskUpdated: (task: Task) => void;
 };
 
-export const EditTask = ({ task, onUpdate }: EditTaskProps) => {
+const taskService: TaskService = new TaskService();
+
+export const EditTask = ({ task, onTaskUpdated }: EditTaskProps) => {
   const toast = useRef<Toast | null>(null);
   const [isVisible, toggleVisible] = useState(false);
 
@@ -48,10 +52,14 @@ export const EditTask = ({ task, onUpdate }: EditTaskProps) => {
     defaultValues: task,
   });
 
-  const onSubmit = (data: EditTaskForm) => {
+  const onSubmit = async (data: EditTaskForm) => {
     try {
-      onUpdate(data);
-      showToast("success", "Task updated successfully");
+      const { data: response } = await taskService.update(task.id, data);
+
+      if (response.data) {
+        onTaskUpdated(task as Task);
+        showToast("success", "Task updated successfully");
+      }
     } catch (err) {
       showToast("error", "Error updating task", err as ReactNode);
     } finally {
